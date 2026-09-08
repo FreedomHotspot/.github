@@ -5,9 +5,9 @@
   // CI installs gems into vendor/bundle (bundler-cache), so without this the
   // run lints YARD's own README and fails on someone else's formatting.
   "ignores": [
-    "vendor/**",
-    "node_modules/**",
-    ".terraform/**",
+    "**/vendor/**",
+    "**/node_modules/**",
+    "**/.terraform/**",
     "doc/**",
     "coverage/**",
 

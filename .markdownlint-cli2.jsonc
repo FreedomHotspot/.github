@@ -1,0 +1,51 @@
+// House Markdown rules. Structure only — see .github-private STANDARDS.md §6:
+// "it checks Markdown structure, not whether links resolve".
+{
+  // Directories that contain Markdown we did not write. vendor/ matters most:
+  // CI installs gems into vendor/bundle (bundler-cache), so without this the
+  // run lints YARD's own README and fails on someone else's formatting.
+  "ignores": [
+    "**/vendor/**",
+    "**/node_modules/**",
+    "**/.terraform/**",
+    "doc/**",
+    "coverage/**",
+
+    // The org profile page. GitHub renders it as the public org front page and
+    // it deliberately opens with prose, not a heading; MD041 would have us
+    // change what the public sees for a lint rule.
+    "profile/**",
+
+    // Issue and PR templates. They open at "## Summary" by design — an H1
+    // there would appear as a heading in the body of every pull request.
+    ".github/pull_request_template.md",
+    ".github/ISSUE_TEMPLATE/**"
+  ],
+
+  "globs": ["**/*.md"],
+
+  "config": {
+    "default": true,
+
+    // Line length is off. The estate writes prose in long lines and every
+    // README violates an 80-column rule; enforcing it would mean rewrapping
+    // eighteen files for no structural gain, and it fights sentence-per-line
+    // diffs.
+    "MD013": false,
+
+    // Inline HTML is used deliberately — badges and a few <details> blocks.
+    "MD033": false,
+
+    // A bare URL is fine in a code block or a runbook step.
+    "MD034": false,
+
+    // Table pipe padding is a source-readability choice, not structure. The
+    // estate aligns its table columns; MD060 wants them unpadded, which would
+    // mean reflowing every table for no reader-visible gain.
+    "MD060": false,
+
+    // Duplicate headings are allowed when nested under different parents —
+    // several runbooks legitimately repeat "### Verify".
+    "MD024": { "siblings_only": true }
+  }
+}

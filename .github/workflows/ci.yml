@@ -1,0 +1,35 @@
+name: CI
+
+on:
+  # No branch filter on pull_request, deliberately: `branches: ['*']` does not
+  # match `/`, so a PR based on a branch like feat/x would get no checks.
+  pull_request:
+  push:
+    branches: [main]
+
+# Supersede an in-flight run when the branch is pushed again.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+# Least privilege: this workflow only checks out and runs linters.
+permissions:
+  contents: read
+
+jobs:
+  check:
+    name: Check
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+
+      # Pinned to a commit: third-party action (v4).
+      - uses: extractions/setup-just@53165ef7e734c5c07cb06b3c8e7b647c5aa16db3
+
+      # Markdown structure only: it does not check that links resolve.
+      - name: markdownlint
+        run: just markdownlint
+
+      - name: actionlint
+        run: just actionlint
